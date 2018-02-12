@@ -4,46 +4,38 @@ import java.util.List;
 
 public class StoreManager {
 
-    StorageCapable sc = new StorageCapable() {  // Kell ilyen?!
-        @Override
-        public List<Product> getAllProduct() {
-            return null;
-        }
-
-        @Override
-        public void storeCDProduct(String name, int price, int tracks) {
-
-        }
-
-        @Override
-        public void storeBookProduct(String name, int price, int pages) {
-
-        }
-    };
+    private StorageCapable storage;
 
     public StoreManager() {
     }
 
-    public String addStorage(storage: StorageCapable) {
-        return String;
+    public void addStorage(StorageCapable storage) {
+        this.storage = storage;
     }
 
     public void addCDProduct(String name, int price, int tracks) {
-
-        // storeCDProduct from interface
+        storage.storeCDProduct(name, price, tracks);
     }
 
     public void addBookProduct(String name, int price, int pages) {
-
-        // storeBookProduct from interface
+        storage.storeBookProduct(name, price, pages);
     }
 
     public String listProducts() {
-
+        String listProduct = "";
+        for (Product p : storage.getAllProduct()) {
+            listProduct = listProduct.concat(p + "\n");
+        }
+        return listProduct;
     }
 
     public int getTotalProductPrice() {
-
+        List<Product> allProduct = storage.getAllProduct();
+        int totalProductPrice = 0;
+        for (Product product : allProduct) {
+            totalProductPrice += (product.getPrice());
+        }
+        return totalProductPrice;
     }
 
 

@@ -1,10 +1,11 @@
 package com.codecool;
 
+
 public class Main {
 
-    StoreManager sm = new StoreManager();
+    private static Menu menu = new Menu();
 
     public static void main(String[] args) {
-
+        menu.handleMenu();
     }
 }
