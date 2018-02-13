@@ -1,6 +1,7 @@
 package com.codecool;
 
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,10 +42,12 @@ public class Menu {
             String line = scanner.nextLine();
             if (!LINES.contains(line)) {
                 System.out.println("Please type 1, 2, 3 or 4!\n");
-            } else if ("5".equals(line)) break;
-            else if ("4".equals(line)) handleTotalPrice();
+            } else if ("5".equals(line)) {
+                System.out.println("Exiting now... Bye!");
+                break;
+            } else if ("4".equals(line)) handleTotalPrice();
             else if ("3".equals(line)) handleList();
-            else if ("2".equals(line)) handleAddBoook();
+            else if ("2".equals(line)) handleAddBook();
             else if ("1".equals(line)) handleAddCD();
         }
     }
@@ -53,15 +56,15 @@ public class Menu {
         System.out.println(sm.listProducts());
     }
 
-    private static void handleAddBoook() {
+    private static void handleAddBook() {
 
         String type = "Book";
         System.out.println("Please enter the title of the book!");
         String name = scanner.nextLine();
         System.out.println("Please enter the price of the book!");
-        int price = Integer.parseInt(scanner.nextLine());
+        int price = getNumber();
         System.out.println("Please enter the number of pages!");
-        int numOfPages = Integer.parseInt(scanner.nextLine());
+        int numOfPages = getNumber();
 
         sm.addBookProduct(name, price, numOfPages);
     }
@@ -72,9 +75,9 @@ public class Menu {
         System.out.println("Please enter the name of the CD!");
         String name = scanner.nextLine();
         System.out.println("Please enter the price of the CD!");
-        int price = Integer.parseInt(scanner.nextLine());
+        int price = getNumber();
         System.out.println("Please enter the number of tracks");
-        int numOfTracks = Integer.parseInt(scanner.nextLine());
+        int numOfTracks = getNumber();
 
         sm.addCDProduct(name, price, numOfTracks);
     }
@@ -83,5 +86,15 @@ public class Menu {
 
         System.out.println("The price of all products:");
         System.out.println(sm.getTotalProductPrice());
+    }
+
+    public static int getNumber() {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Wrong input!(Please enter a number!)");
+            }
+        }
     }
 }

@@ -12,4 +12,9 @@ public class BookProduct extends Product {
     public int getNumOfPages() {
         return numOfPages;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s  (%d HUF, number of pages: %d)", getName(), getPrice(), getNumOfPages());
+    }
 }

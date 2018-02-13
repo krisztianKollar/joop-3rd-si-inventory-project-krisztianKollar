@@ -12,4 +12,9 @@ public class CDProduct extends Product {
     public int getNumOfTracks() {
         return numOfTracks;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s  (%d HUF, number of tracks: %d)", getName(), getPrice(), getNumOfTracks());
+    }
 }

@@ -22,7 +22,7 @@ import java.util.List;
 
 public abstract class Store implements StorageCapable {
 
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
 
     private void saveToXml(Product product) {
 
@@ -35,7 +35,6 @@ public abstract class Store implements StorageCapable {
             for (Product p : getAllProduct()) {
                 addProductToDOM(doc, rootElement, p);
             }
-            //addProductToDOM(doc, rootElement, product);
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
@@ -114,14 +113,13 @@ public abstract class Store implements StorageCapable {
 
                 Element eElement = (Element) nodeLoaded;
 
-                if (eElement.getElementsByTagName("type").equals("cd")) {
+                if (eElement.getElementsByTagName("Type").item(0).getTextContent().equals("Cd")) {
                     String name = eElement.getElementsByTagName("Name").item(0).getTextContent();
                     int price = Integer.parseInt(eElement.getElementsByTagName("Price").item(0).getTextContent());
                     int size = Integer.parseInt(eElement.getElementsByTagName("Size").item(0).getTextContent());
                     Product productLoaded = new CDProduct(name, price, size);
                     productsLoaded.add(productLoaded);
                 } else {
-                    // folyton ide jut!
                     String name = eElement.getElementsByTagName("Name").item(0).getTextContent();
                     int price = Integer.parseInt(eElement.getElementsByTagName("Price").item(0).getTextContent());
                     int size = Integer.parseInt(eElement.getElementsByTagName("Size").item(0).getTextContent());
