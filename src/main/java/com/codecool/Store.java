@@ -87,7 +87,7 @@ public abstract class Store implements StorageCapable {
     }
 
     protected Product createProduct(String type, String name, int price, int size) {
-        if (type.equals("CD")) {
+        if (type.equals("Cd")) {
             return new CDProduct(name, price, size);
         } else {
             return new BookProduct(name, price, size);
