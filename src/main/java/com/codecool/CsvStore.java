@@ -21,27 +21,25 @@ public class CsvStore implements StorageCapable {
         StringBuilder sb = new StringBuilder();
 
         try {
-            for (Product p : getAllProduct()) {
-                if (product instanceof CDProduct) {
-                    CDProduct c = (CDProduct) p;
-                    sb.append("Cd,");
-                    sb.append(String.format("%s,", c.getName()));
-                    sb.append(String.format("%s,", String.valueOf(c.getPrice())));
-                    sb.append(String.format("%s\n", String.valueOf(c.getNumOfTracks())));
+            if (product instanceof CDProduct) {
+                CDProduct c = (CDProduct) product;
+                sb.append("Cd,");
+                sb.append(String.format("%s,", c.getName()));
+                sb.append(String.format("%s,", String.valueOf(c.getPrice())));
+                sb.append(String.format("%s\n", String.valueOf(c.getNumOfTracks())));
 
-                } else {
-                    BookProduct b = (BookProduct) p;
-                    sb.append("Book,");
-                    sb.append(String.format("%s,", b.getName()));
-                    sb.append(String.format("%s,", String.valueOf(b.getPrice())));
-                    sb.append(String.format("%s\n", String.valueOf(b.getNumOfPages())));
-                }
-
-                System.out.println("File saved!");
+            } else {
+                BookProduct b = (BookProduct) product;
+                sb.append("Book,");
+                sb.append(String.format("%s,", b.getName()));
+                sb.append(String.format("%s,", String.valueOf(b.getPrice())));
+                sb.append(String.format("%s\n", String.valueOf(b.getNumOfPages())));
             }
-            FileWriter writer = new FileWriter("products.csv");
+
+            FileWriter writer = new FileWriter("products.csv", true);
             writer.write(sb.toString());
             writer.close();
+            sb.setLength(0);
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -59,11 +57,17 @@ public class CsvStore implements StorageCapable {
 
     public List<Product> loadProductsFromCsv() throws IOException {
         List<Product> productsLoaded = new ArrayList<>();
+        String csvFile = "products.csv";
 
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("products.csv"));
-        String productFromCsv = bufferedReader.readLine();
-        while (productFromCsv != null) {
-            String[] fieldsFromCsv = productFromCsv.split(",");
+        String productFromCsv = "";
+        String cvsSplitBy = ",";
+
+        BufferedReader br = new BufferedReader(new FileReader(csvFile));
+
+        while ((productFromCsv = br.readLine()) != null) {
+
+            String[] fieldsFromCsv = productFromCsv.split(cvsSplitBy);
+
             if (fieldsFromCsv[0].equals("Cd")) {
                 productsLoaded.add(new CDProduct(fieldsFromCsv[1], Integer.parseInt(fieldsFromCsv[2]), Integer.parseInt(fieldsFromCsv[3])));
             } else if (fieldsFromCsv[0].equals("Book")) {
@@ -71,6 +75,7 @@ public class CsvStore implements StorageCapable {
             }
         }
         return productsLoaded;
+
     }
 
     public void store(Product p) {
@@ -78,21 +83,22 @@ public class CsvStore implements StorageCapable {
         storeProduct(p);
     }
 
-    public List<Product> getAllProduct()  {
+    @Override
+    public List<Product> getAllProduct() {
         return productList;
     }
 
     @Override
     public void storeCDProduct(String name, int price, int tracks) {
-        Product p = createProduct("CD", name, price, tracks);
-        productList.add(p);
+        Product p = createProduct("Cd", name, price, tracks);
+        //productList.add(p);
         store(p);
     }
 
     @Override
     public void storeBookProduct(String name, int price, int pages) {
         Product p = createProduct("Book", name, price, pages);
-        productList.add(p);
+        //productList.add(p);
         store(p);
     }
 }
