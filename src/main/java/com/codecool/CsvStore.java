@@ -5,7 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public abstract class CsvStore implements StorageCapable {
+public class CsvStore implements StorageCapable {
+
+    public CsvStore(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    public CsvStore() {
+    }
 
     private List<Product> productList = new ArrayList<>();
 
@@ -17,17 +24,17 @@ public abstract class CsvStore implements StorageCapable {
             for (Product p : getAllProduct()) {
                 if (product instanceof CDProduct) {
                     CDProduct c = (CDProduct) p;
-                    sb.append("Cd");
-                    sb.append(c.getName());
-                    sb.append(String.valueOf(c.getPrice()));
-                    sb.append(String.valueOf(c.getNumOfTracks()));
+                    sb.append("Cd,");
+                    sb.append(String.format("%s,", c.getName()));
+                    sb.append(String.format("%s,", String.valueOf(c.getPrice())));
+                    sb.append(String.format("%s\n", String.valueOf(c.getNumOfTracks())));
 
                 } else {
                     BookProduct b = (BookProduct) p;
-                    sb.append("Book");
-                    sb.append(b.getName());
-                    sb.append(String.valueOf(b.getPrice()));
-                    sb.append(String.valueOf(b.getNumOfPages()));
+                    sb.append("Book,");
+                    sb.append(String.format("%s,", b.getName()));
+                    sb.append(String.format("%s,", String.valueOf(b.getPrice())));
+                    sb.append(String.format("%s\n", String.valueOf(b.getNumOfPages())));
                 }
 
                 System.out.println("File saved!");
@@ -56,19 +63,36 @@ public abstract class CsvStore implements StorageCapable {
         BufferedReader bufferedReader = new BufferedReader(new FileReader("products.csv"));
         String productFromCsv = bufferedReader.readLine();
         while (productFromCsv != null) {
-            String[] fieldFromCsv = productFromCsv.split(",");
-            if (fieldFromCsv[0].equals("Cd")) {
-                productsLoaded.add(new CDProduct(fieldFromCsv[1], Integer.parseInt(fieldFromCsv[2]), Integer.parseInt(fieldFromCsv[3])));
-            } else if (fieldFromCsv[0].equals("Book")) {
-                productsLoaded.add(new BookProduct(fieldFromCsv[1], Integer.parseInt(fieldFromCsv[2]), Integer.parseInt(fieldFromCsv[3])));
+            String[] fieldsFromCsv = productFromCsv.split(",");
+            if (fieldsFromCsv[0].equals("Cd")) {
+                productsLoaded.add(new CDProduct(fieldsFromCsv[1], Integer.parseInt(fieldsFromCsv[2]), Integer.parseInt(fieldsFromCsv[3])));
+            } else if (fieldsFromCsv[0].equals("Book")) {
+                productsLoaded.add(new BookProduct(fieldsFromCsv[1], Integer.parseInt(fieldsFromCsv[2]), Integer.parseInt(fieldsFromCsv[3])));
             }
-            return productsLoaded;
         }
+        return productsLoaded;
     }
 
-        public void store(Product p) {
-            saveToCsv(p);
-            storeProduct(p);
-        }
+    public void store(Product p) {
+        saveToCsv(p);
+        storeProduct(p);
+    }
+
+    public List<Product> getAllProduct()  {
+        return productList;
+    }
+
+    @Override
+    public void storeCDProduct(String name, int price, int tracks) {
+        Product p = createProduct("CD", name, price, tracks);
+        productList.add(p);
+        store(p);
+    }
+
+    @Override
+    public void storeBookProduct(String name, int price, int pages) {
+        Product p = createProduct("Book", name, price, pages);
+        productList.add(p);
+        store(p);
     }
 }
